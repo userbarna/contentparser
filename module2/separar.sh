@@ -8,6 +8,7 @@ lineseparator="-----------------------------------------------------------------
 #Recibimos como segundo parametro el tamaño de cada trozo
 duracionsegundostrozo=$2
 
+cd source
 for file in *.mp4;
 do
 	echo $lineseparator
@@ -38,13 +39,28 @@ do
 				FICHEROSALIDA=$(printf "$file.$N.mp4")
 				echo $FICHEROSALIDA
 				echo "Trozo $N empieza en $OFFSET sec. y terminará en $COMPROBAR_QUITAR_ULTIMO_TROZO secs."
-				ffmpeg -i $file -vcodec copy -acodec copy -ss $OFFSET -t $DURACIONTROZO $FICHEROSALIDA 			
+				ffmpeg -i $file -vcodec copy -acodec copy -ss $OFFSET -t $DURACIONTROZO ../partidos/$FICHEROSALIDA 			
 			fi
 			let "N = N + 1"
 			let "OFFSET = OFFSET + DURACIONTROZO"
 		done
 	fi
 
+	#Copiamos cada uno de los videos a otra carpeta
+	cd ..
+	cd partidos
+	for file in *.mp4;
+	do
+		#Subimos el video al servidor con FTP
+		echo Enviando video $file al servidor
+	done
+
+	#Borramos todos los videos partiods para no ocupar espacio
+	rm *.mp4;
+	cd ..
+	cd source
+
 done
 	echo $lineseparator
+
 
